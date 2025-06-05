@@ -1,0 +1,10 @@
+namespace GestaoFinanceira.Models
+{
+    public enum StatusParcela
+    {
+        Pendente = 1,
+        Pago = 2,
+        Cancelado = 3,
+        Removido = 4
+    }
+}
