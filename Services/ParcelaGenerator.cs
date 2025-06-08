@@ -37,7 +37,19 @@ namespace GestaoFinanceira.Services
 
         private static DateTime CalcularVencimentoParcela(DateTime dataCompra, int numeroParcela, int diaFechamento)
         {
-            
+            bool compraAntesFechamento = dataCompra.Day < diaFechamento;
+
+            // Define o mês do primeiro vencimento
+            int mesesASomar = compraAntesFechamento ? numeroParcela - 1 : numeroParcela;
+
+            // Avança os meses a partir do mês da compra
+            DateTime baseVencimento = dataCompra.AddMonths(mesesASomar);
+
+            // Ajusta o dia de vencimento, tratando meses com menos dias (ex: fevereiro)
+            int diasNoMes = DateTime.DaysInMonth(baseVencimento.Year, baseVencimento.Month);
+            int dia = Math.Min(diaFechamento, diasNoMes);
+
+            return new DateTime(baseVencimento.Year, baseVencimento.Month, dia);
         }
     }
 }
