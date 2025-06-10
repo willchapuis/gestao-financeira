@@ -8,6 +8,29 @@ namespace GestaoFinanceira.Services.Database
 {
     public static class CartaoDb
     {
+        public static Cartao? BuscarPorId(int id)
+        {
+            var query = @"
+                SELECT Id, Titular, Banco, DiaFechamento
+                FROM Cartao
+                WHERE Id = @Id AND DataFim IS NULL;";
+
+            Cartao? cartao = null;
+
+            BancoService.ConsultarComParametros(query, reader =>
+            {
+                cartao = new Cartao
+                {
+                    Id = reader.GetInt32(0),
+                    Titular = reader.GetString(1),
+                    Banco = reader.GetString(2),
+                    DiaFechamento = reader.GetInt32(3)
+                };
+            }, new SQLiteParameter("@Id", id));
+
+            return cartao;
+        }
+
         public static void Inserir(Cartao cartao)
         {
             var query = @"

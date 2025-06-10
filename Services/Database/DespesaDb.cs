@@ -45,18 +45,37 @@ namespace GestaoFinanceira.Services.Database
                     @Data, @Descricao, @Valor, @MetodoPagamento,
                     @CategoriaId, @CartaoId, @QuantidadeParcelas
                 );
+                SELECT last_insert_rowid();
             ";
 
-            BancoService.ExecutarComando(query, cmd =>
+            var parametros = new Dictionary<string, object?>
             {
-                cmd.Parameters.AddWithValue("@Data", despesa.Data.ToString("yyyy-MM-dd"));
-                cmd.Parameters.AddWithValue("@Descricao", despesa.Descricao);
-                cmd.Parameters.AddWithValue("@Valor", despesa.Valor);
-                cmd.Parameters.AddWithValue("@MetodoPagamento", (int)despesa.MetodoPagamento);
-                cmd.Parameters.AddWithValue("@CategoriaId", despesa.CategoriaId.HasValue ? despesa.CategoriaId : DBNull.Value);
-                cmd.Parameters.AddWithValue("@CartaoId", despesa.CartaoId.HasValue ? despesa.CartaoId : DBNull.Value);
-                cmd.Parameters.AddWithValue("@QuantidadeParcelas", despesa.QuantidadeParcelas.HasValue ? despesa.QuantidadeParcelas : DBNull.Value);
-            });
+                { "@Data", despesa.Data.ToString("yyyy-MM-dd") },
+                { "@Descricao", despesa.Descricao },
+                { "@Valor", despesa.Valor },
+                { "@MetodoPagamento", (int)despesa.MetodoPagamento },
+                { "@CategoriaId", despesa.CategoriaId.HasValue ? despesa.CategoriaId : DBNull.Value },
+                { "@CartaoId", despesa.CartaoId.HasValue ? despesa.CartaoId : DBNull.Value },
+                { "@QuantidadeParcelas", despesa.QuantidadeParcelas.HasValue ? despesa.QuantidadeParcelas : DBNull.Value }
+            };
+
+            object? idObj = BancoService.ExecutarEscalar(query, parametros);
+
+            // Se for Cartão de Crédito, gerar e inserir parcelas
+            if (despesa.MetodoPagamento == MetodoPagamento.CartaoCredito && despesa.CartaoId.HasValue && despesa.QuantidadeParcelas.HasValue)
+            {
+                var cartao = CartaoDb.BuscarPorId(despesa.CartaoId.Value);
+
+                if (cartao == null)
+                    throw new Exception("Cartão de crédito não encontrado.");
+
+                var parcelas = ParcelaGenerator.GerarParcelas(despesa, cartao);
+
+                foreach (var parcela in parcelas)
+                {
+                    ParcelaDb.Inserir(parcela);
+                }
+            }
         }
 
         public static List<Despesa> Listar()
