@@ -7,7 +7,7 @@ namespace GestaoFinanceira.Models
         public Despesa Despesa { get; set; }
         public int NumeroDaParcela { get; set; } // 1, 2, 3...
         public decimal ValorParcela { get; set; }
-        public DateTime DataPagamento { get; set; }
+        public DateTime DataVencimento { get; set; }
         public StatusParcela Status { get; set; } // Pendente, Pago, Cancelado, Removido...
     }
 }

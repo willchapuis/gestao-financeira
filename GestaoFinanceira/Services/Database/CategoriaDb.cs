@@ -8,14 +8,37 @@ namespace GestaoFinanceira.Services.Database
 {
     public static class CategoriaDb
     {
+        public static Categoria? BuscarPorId(int id)
+        {
+            var query = @"
+                SELECT Id, Nome, DataFim
+                FROM Categoria
+                WHERE Id = @Id AND DataFim IS NULL;";
+
+            Categoria? categoria = null;
+
+            BancoService.ConsultarComParametros(query, reader =>
+            {
+                categoria = new Categoria
+                {
+                    Id = reader.GetInt32(0),
+                    Nome = reader.GetString(1)
+                };
+            }, new SQLiteParameter("@Id", id));
+
+            return categoria;
+        }
+
         public static void Inserir(Categoria categoria)
         {
             var query = @"INSERT INTO Categoria (Nome) VALUES (@Nome);";
 
-            BancoService.ExecutarComando(query, cmd =>
+            var parametros = new Dictionary<string, object?>
             {
-                cmd.Parameters.AddWithValue("@Nome", categoria.Nome);
-            });
+                {"@Nome", categoria.Nome }
+            };
+
+            BancoService.ExecutarComando(query, parametros);
         }
 
         public static void Alterar(Categoria categoria)
@@ -25,19 +48,22 @@ namespace GestaoFinanceira.Services.Database
                 WHERE Id = @Id AND DataFim IS NULL;
             ";
 
-            BancoService.ExecutarComando(query, cmd =>
+            var parametros = new Dictionary<string, object?>
             {
-                cmd.Parameters.AddWithValue("@Nome", categoria.Nome);
-                cmd.Parameters.AddWithValue("@Id", categoria.Id);
-            });
+                {"@Nome", categoria.Nome },
+                {"@Id", categoria.Id }
+            };
+
+            BancoService.ExecutarComando(query, parametros);
         }
 
-        public static List<Despesa> Listar()
+        public static List<Categoria> Listar()
         {
             var query = @"
                 SELECT Id, Nome
                 FROM Categoria
-                WHERE DataFim IS NULL;
+                WHERE DataFim IS NULL
+                ORDER BY Nome
             ";
 
             var categorias = new List<Categoria>();

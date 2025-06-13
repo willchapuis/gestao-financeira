@@ -41,12 +41,14 @@ namespace GestaoFinanceira.Services.Database
                 );
             ";
 
-            BancoService.ExecutarComando(query, cmd =>
+            var parametros = new Dictionary<string, object?>
             {
-                cmd.Parameters.AddWithValue("@Titular", cartao.Titular);
-                cmd.Parameters.AddWithValue("@Banco", cartao.Banco);
-                cmd.Parameters.AddWithValue("@DiaFechamento", cartao.DiaFechamento);
-            });
+                {"@Titular", cartao.Titular },
+                {"@Banco", cartao.Banco },
+                {"@DiaFechamento", cartao.DiaFechamento }
+            };
+
+            BancoService.ExecutarComando(query, parametros);
         }
 
         public static void Alterar(Cartao cartao)
@@ -59,13 +61,15 @@ namespace GestaoFinanceira.Services.Database
                 WHERE Id = @Id AND DataFim IS NULL;
             ";
 
-            BancoService.ExecutarComando(query, cmd =>
+            var parametros = new Dictionary<string, object?>
             {
-                cmd.Parameters.AddWithValue("@Titular", cartao.Titular);
-                cmd.Parameters.AddWithValue("@Banco", cartao.Banco);
-                cmd.Parameters.AddWithValue("@DiaFechamento", cartao.DiaFechamento);
-                cmd.Parameters.AddWithValue("@Id", despesa.Id);
-            });
+                {"@Titular", cartao.Titular },
+                {"@Banco", cartao.Banco },
+                {"@DiaFechamento", cartao.DiaFechamento },
+                {"@Id", cartao.Id }
+            };
+
+            BancoService.ExecutarComando(query, parametros);
         }
 
         public static List<Cartao> Listar()
@@ -73,7 +77,8 @@ namespace GestaoFinanceira.Services.Database
             var query = @"
                 SELECT Id, Titular, Banco, DiaFechamento
                 FROM Cartao
-                WHERE DataFim IS NULL;
+                WHERE DataFim IS NULL
+                ORDER BY Titular, DiaFechamento
             ";
 
             var cartaos = new List<Cartao>();

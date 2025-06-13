@@ -1,11 +1,17 @@
 using System.IO;
 using GestaoFinanceira.Services.Database;
+using System.Data.SQLite;
 
 namespace GestaoFinanceira.Services
 {
     public static class BancoService
     {
         public static string StringConexao => "Data Source=Data/banco.db";
+
+        public static SQLiteConnection ObterConexao()
+        {
+            return new SQLiteConnection(StringConexao);
+        }
 
         public static void AtualizarDataFim(string nomeTabela, int id) // Soft Delete - Remoção Lógica
         {
@@ -17,11 +23,13 @@ namespace GestaoFinanceira.Services
 
             var dataHoraAtual = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
 
-            ExecutarComando(query, cmd =>
+            var parametros = new Dictionary<string, object?>
             {
-                cmd.Parameters.AddWithValue("@DataFim", dataHoraAtual);
-                cmd.Parameters.AddWithValue("@Id", id);
-            });
+                { "@DataFim", dataHoraAtual },
+                { "@Id", id }
+            };
+
+            ExecutarComando(query, parametros);
         }
 
         public static void ConsultarComParametros(string query, Action<SQLiteDataReader> processar, params SQLiteParameter[] parametros)
@@ -100,15 +108,15 @@ namespace GestaoFinanceira.Services
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Data TEXT NOT NULL,
                     Descricao TEXT NOT NULL,
-                    Valor REAL NOT NULL,
+                    ValorLiquido REAL NOT NULL,
                     DataFim TEXT
                 );
 
                 CREATE TABLE IF NOT EXISTS Despesa (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Data TEXT NOT NULL,
+                    DataCompra TEXT NOT NULL,
                     Descricao TEXT NOT NULL,
-                    Valor REAL NOT NULL,
+                    ValorTotal REAL NOT NULL,
                     MetodoPagamento INTEGER NOT NULL,
                     CategoriaId INTEGER,
                     CartaoId INTEGER,
@@ -122,7 +130,7 @@ namespace GestaoFinanceira.Services
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     DespesaId INTEGER NOT NULL,
                     NumeroDaParcela INTEGER NOT NULL,
-                    Valor REAL NOT NULL,
+                    ValorParcela REAL NOT NULL,
                     DataVencimento TEXT NOT NULL,
                     Status INTEGER NOT NULL,
                     FOREIGN KEY (DespesaId) REFERENCES Despesa(Id)

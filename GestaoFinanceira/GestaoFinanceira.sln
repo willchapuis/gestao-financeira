@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36203.30
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestaoFinanceira", "GestaoFinanceira.csproj", "{926EF7AB-3C7B-489C-A11E-3641B32E84C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Debug|x86.ActiveCfg = Debug|x86
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Debug|x86.Build.0 = Debug|x86
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Release|x86.ActiveCfg = Release|x86
+		{926EF7AB-3C7B-489C-A11E-3641B32E84C9}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {57B4DD44-1C0C-4C8F-B664-D4655B36D4B2}
+	EndGlobalSection
+EndGlobal
