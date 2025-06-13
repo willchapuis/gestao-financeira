@@ -1,7 +1,6 @@
-﻿
-namespace GestaoFinanceira.Forms
+﻿namespace GestaoFinanceira.Forms
 {
-    partial class CartaoForm
+    partial class DashboardForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,34 +28,19 @@ namespace GestaoFinanceira.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
             SuspendLayout();
             // 
-            // panel1
-            // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel1.AutoScroll = true;
-            panel1.Location = new Point(12, 115);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(559, 257);
-            panel1.TabIndex = 0;
-            // 
-            // CartaoForm
+            // DashboardForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.GradientInactiveCaption;
-            ClientSize = new Size(583, 384);
-            Controls.Add(panel1);
-            Margin = new Padding(4, 3, 4, 3);
-            Name = "CartaoForm";
-            Load += CartaoForm_Load;
+            ClientSize = new Size(800, 450);
+            Name = "DashboardForm";
+            Text = "DashboardForm";
             ResumeLayout(false);
-
         }
 
         #endregion
-
-        private Panel panel1;
     }
 }

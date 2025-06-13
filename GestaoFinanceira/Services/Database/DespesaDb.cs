@@ -12,7 +12,7 @@ namespace GestaoFinanceira.Services.Database
         {
             var query = @"
                 SELECT Id, DataCompra, Descricao, ValorTotal, 
-                MetodoPagamento, CategoriaId, CartaoId, QuantidadeParcelas
+                MetodoPagamento, QuantidadeParcelas, CategoriaId, CartaoId
                 FROM Despesa
                 WHERE Id = @Id AND DataFim IS NULL;";
 
@@ -27,9 +27,9 @@ namespace GestaoFinanceira.Services.Database
                     Descricao = reader.GetString(2),
                     ValorTotal = (decimal)reader.GetDouble(3),
                     MetodoPagamento = (MetodoPagamento)reader.GetInt32(4),
-                    CategoriaId = reader.GetInt32(5),
-                    CartaoId = reader.GetInt32(6),
-                    QuantidadeParcelas = reader.GetInt32(7)
+                    QuantidadeParcelas = reader.GetInt32(5),
+                    CategoriaId = reader.GetInt32(6),
+                    CartaoId = reader.GetInt32(7)
                 };
             }, new SQLiteParameter("@Id", id));
 
@@ -56,7 +56,7 @@ namespace GestaoFinanceira.Services.Database
                 {"@Descricao", despesa.Descricao },
                 {"@ValorTotal", despesa.ValorTotal },
                 {"@MetodoPagamento", (int)despesa.MetodoPagamento },
-                {"@QuantidadeParcelas", despesa.QuantidadeParcelas.HasValue ? despesa.QuantidadeParcelas : DBNull.Value },
+                {"@QuantidadeParcelas", despesa.QuantidadeParcelas },
                 {"@CategoriaId", despesa.CategoriaId.HasValue ? despesa.CategoriaId : DBNull.Value },
                 {"@CartaoId", despesa.CartaoId.HasValue ? despesa.CartaoId : DBNull.Value },
                 {"@Id", despesa.Id }
@@ -84,7 +84,7 @@ namespace GestaoFinanceira.Services.Database
                 {"@Descricao", despesa.Descricao },
                 {"@ValorTotal", despesa.ValorTotal },
                 {"@MetodoPagamento", (int)despesa.MetodoPagamento },
-                {"@QuantidadeParcelas", despesa.QuantidadeParcelas.HasValue ? despesa.QuantidadeParcelas : DBNull.Value },
+                {"@QuantidadeParcelas", despesa.QuantidadeParcelas },
                 {"@CategoriaId", despesa.CategoriaId.HasValue ? despesa.CategoriaId : DBNull.Value },
                 {"@CartaoId", despesa.CartaoId.HasValue ? despesa.CartaoId : DBNull.Value }
             };
@@ -92,7 +92,7 @@ namespace GestaoFinanceira.Services.Database
             object? idObj = BancoService.ExecutarEscalar(query, parametros);
 
             // Se for Cartão de Crédito, gerar e inserir parcelas
-            if (despesa.MetodoPagamento == MetodoPagamento.Credito && despesa.CartaoId.HasValue && despesa.QuantidadeParcelas.HasValue)
+            if (despesa.MetodoPagamento == MetodoPagamento.Credito && despesa.CartaoId.HasValue && despesa.QuantidadeParcelas > 1)
             {
                 var cartao = CartaoDb.BuscarPorId(despesa.CartaoId.Value);
 
@@ -129,7 +129,7 @@ namespace GestaoFinanceira.Services.Database
                     Descricao = reader.GetString(2),
                     ValorTotal = reader.GetDecimal(3),
                     MetodoPagamento = (MetodoPagamento)reader.GetInt32(4),
-                    QuantidadeParcelas = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                    QuantidadeParcelas = reader.GetInt32(5),
                     CategoriaId = reader.IsDBNull(6) ? null : reader.GetInt32(6),
                     CartaoId = reader.IsDBNull(7) ? null : reader.GetInt32(7)
                 };
